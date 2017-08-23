@@ -7,9 +7,9 @@ def test(request):
 urlpatterns = [
     # url(r'^$', views.test),
     url(r'^$', views.index),
-    # url(r'^index/$', views.index),
-    # url(r'^register/$', views.register, name='my_register'),
-    # url(r'^login/$', views.login, name='my_login'),
+    url(r'^index/$', views.index),
+    url(r'^register/$', views.register, name='my_register'),
+    url(r'^login/$', views.login, name='my_login'),
     # # url(r'^dashboard/$', views.dashboard, name='my_dashboard'),
     # url(r'^logout/$', views.logout, name='my_logout'),
     # # url(r'^showAll/$', views.showAll, name='my_showAll'),

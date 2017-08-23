@@ -2,24 +2,31 @@ from __future__ import unicode_literals
 from django.db import models
 import re
 import bcrypt
+from datetime import date
 import datetime
+import calendar
 
 
 class UserManager(models.Manager):
     def register_validator(self, postData):
+        a = postData['alias']
+        n = postData['name']
+        print a, n
+
         results = {'status': True, 'errors': []}
-        if len(postData['first_name'])==0:
-            results["errors"].append("'First name' is a required field.")
-        if len(postData['last_name'])==0:
-            results["errors"].append("'Last name' is a required field.")
-        if len(postData['first_name'])<3:
-            results["errors"].append("First name should be more than 2 characters.")
-        if len(postData['last_name'])<3:
-            results["errors"].append("Last name should be more than 2 characters.")
-        if postData['first_name'].isalpha()==False:
-            results["errors"].append("Names must be characters (a-z) only.")
-        if postData['last_name'].isalpha()==False:
-            results["errors"].append("Names must be characters (a-z) only.")
+        if len(postData['name'])==0:
+            results["errors"].append("'Name' is a required field.")
+        if len(postData['alias'])==0:
+            results["errors"].append("'Alias' is a required field.")
+        if len(postData['name'])<3:
+            results["errors"].append("Name should be more than 2 characters.")
+        if len(postData['alias'])<3:
+            results["errors"].append("Alias should be more than 2 characters.")
+        # adjust below to allow spaces
+        # if postData['name'].isalpha()==False:
+        #     results["errors"].append("Names must be characters (a-z) only.")
+        # if postData['alias'].isalpha()==False:
+        #     results["errors"].append("Alias must be characters (a-z) only.")
         if len(postData['email'])==0:
             results["errors"].append("'Email' is a required field.")
         if not re.match('(\w+[.|\w])*@(\w+[.])*\w+', postData['email']):
@@ -36,16 +43,17 @@ class UserManager(models.Manager):
 
         if len(results['errors']):
             results['status']=False
-
+        print results
         return results
 
     def createUser(self, postData):
         hash1 = bcrypt.hashpw(postData['psw'].encode(), bcrypt.gensalt())
         user = User.objects.create(
-            first_name=postData['first_name'],
-            last_name=postData['last_name'],
+            name=postData['name'],
+            alias=postData['alias'],
             email=postData['email'],
-            password=hash1
+            password=hash1,
+            birthdate=postData['birthdate']
         )
         return user
 
@@ -65,8 +73,8 @@ class UserManager(models.Manager):
         return results
 
 class User(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    alias = models.CharField(max_length=50)
     email = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     birthdate = models.DateField(auto_now_add=False)
@@ -75,4 +83,4 @@ class User(models.Model):
     pokes_given = models.ManyToManyField("self", symmetrical=False, related_name='pokes_received')
     objects = UserManager()
     def __repr__(self):
-        return "<User object: {} {} {} {}>".format(self.first_name, self.last_name, self.email, self.password)
+        return "<User object: {} {} {} {} {}>".format(self.name, self.alias, self.email, self.password, self.birthdate)
