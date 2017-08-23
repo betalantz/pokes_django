@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Poke Central</title>
+        <meta charset="UTF-8">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet"> -->
+    </head>
+    <body>
+    	<header>
+			<div style="float: right;">
+				<a href="/logout">Logout</a>
+			</div>
+		</header>
+
+		<h1>Welcome, {{request.session.user_alias}} !</h1>
+		<br>
+
+		<br><br>
+
+		<h2>People you may want to poke...</h2>
+		<table>
+			<tr>
+				<td>Name</td>
+				<td>Alias</td>
+				<td>Email</td>
+				<td>Poke History</td>
+				<td>Action</td>
+			</tr>
+			{%for user in users%}
+			<tr>
+				<td>{{user.name}}</td>
+				<td>{{user.alias}}</td>
+				<td>{{user.email}}</td>
+				<td>{{user.all_pokes}}</td>
+				<td><a href="">Poke</a></td>
+			</tr>
+			{%endfor%}
+		</table>
+    </body>
+</html>

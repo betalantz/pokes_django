@@ -23,5 +23,5 @@ def test(request):
 urlpatterns = [
     # url(r'^', test),
     url(r'^', include('apps.users_app.urls')),
-    # url(r'^', include('apps.heroes_app.urls')),
+    url(r'^', include('apps.main_app.urls')),
 ]

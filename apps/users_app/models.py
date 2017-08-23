@@ -80,6 +80,7 @@ class User(models.Model):
     birthdate = models.DateField(auto_now_add=False)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+    all_pokes = models.IntegerField(default=0)
     pokes_given = models.ManyToManyField("self", symmetrical=False, related_name='pokes_received')
     objects = UserManager()
     def __repr__(self):

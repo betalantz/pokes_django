@@ -33,8 +33,8 @@ def login(request):
 
     storage = messages.get_messages(request)
     storage.used = True
-    # return redirect('/main_app/dashboard')
-    return HttpResponse("Login success")
+    return redirect('/main_app/dashboard')
+    # return HttpResponse("Login success")
 
 def sessionCheck(request):
     try:
