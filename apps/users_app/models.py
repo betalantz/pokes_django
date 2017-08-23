@@ -72,13 +72,13 @@ class UserManager(models.Manager):
             results['user']=users[0]
         return results
 
-    def add_relationship(self, id):
-        relationship, created = Pokes.objects.get_or_create(
-            poke_giver = self,
-            poke_receiver=id, 
-            total_this_rel =+ 1
-        )
-        return relationship
+    # def add_relationship(self, id):
+    #     relationship, created = Pokes.objects.get_or_create(
+    #         poke_giver = self,
+    #         poke_receiver=id, 
+    #         total_this_rel =+ 1
+    #     )
+    #     return relationship
 
 class User(models.Model):
     name = models.CharField(max_length=50)
@@ -89,7 +89,12 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     all_pokes = models.IntegerField(default=0)
-    relationships = models.ManyToManyField("self", through="Pokes", symmetrical=False, related_name='related_to')
+    relationships = models.ManyToManyField(
+        "self", 
+        through="Pokes",
+        symmetrical=False, 
+        related_name='related_to'
+        )
     objects = UserManager()
     def __repr__(self):
         return "<User object: {} {} {} {} {}>".format(self.name, self.alias, self.email, self.password, self.birthdate)

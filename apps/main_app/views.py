@@ -27,13 +27,15 @@ def get_pokers(request):
     )
 
 
-def addPoke(request, id):
-    user = User.objects.get(id=id)
-    user.all_pokes += 1
-    user.save()
-    logged_user = request.session['user_id']
-    poke_stat = User.objects.get(id=logged_user)
-    p = Pokes.objects.create(poke_giver=poke_stat, poke_receiver=user, total_this_rel = 1)
+def addPoke(request, victim_id):
+    victim = User.objects.get(id=victim_id)
+    victim.all_pokes += 1
+    victim.save()
+
+    my_id = request.session['user_id']
+    my_user = User.objects.get(id=my_id)
+    
+    p = Pokes.objects.create(poke_giver=poke_stat, poke_receiver=victim, total_this_rel = 1)
     p.save()
     
     return redirect('/main_app/dashboard')
