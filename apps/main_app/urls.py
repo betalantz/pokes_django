@@ -7,4 +7,6 @@ def test(request):
 urlpatterns = [
     # url(r'^$', views.test),
     url(r'^main_app/dashboard/$', views.dashboard, name='my_dashboard'),
+    url(r'^main_app/(?P<id>\d+)/addPoke', views.addPoke, name='addPoke'),
+
 ]

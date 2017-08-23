@@ -42,12 +42,6 @@ def sessionCheck(request):
     except:
         return False
 
-# # def success(request):
-# #     if sessionCheck(request)==False:
-# #         return redirect ('/')
-# #     messages.success(request, 'Successfully logged in!')
-# #     return render(request, 'login_app/dash.html') #should be 'heroes_app/dash.html' ??
-
 def logout(request):
     request.session.flush() #also check .clear() method. What are advantges?
     return redirect ('/')
