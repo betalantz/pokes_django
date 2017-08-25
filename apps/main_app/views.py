@@ -16,8 +16,8 @@ def dashboard(request):
     context = {
         'users' : User.objects.all().exclude(id=request.session['user_id']),
         'all_pokes' : User.objects.annotate(all_pokes=Count('poke_receivers'))
-        'poked_curr' : logged_user.relationships.filter(poke_receivers__poke_giver=logged_user).annotate(dcount=Count('alias')),
-        'poked_ppl' :  logged_user.relationships.filter(poke_givers__poke_receiver=logged_user).annotate(pcount=Count('alias'))
+        # 'poked_curr' : logged_user.relationships.filter(poke_receivers__poke_giver=logged_user).annotate(dcount=Count('alias')),
+        # 'poked_ppl' :  logged_user.relationships.filter(poke_givers__poke_receiver=logged_user).annotate(pcount=Count('alias'))
         }
     return render(request, 'main_app/dashboard.html', context)
 

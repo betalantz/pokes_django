@@ -23,8 +23,10 @@ class UserManager(models.Manager):
         if len(postData['alias'])<3:
             results["errors"].append("Alias should be more than 2 characters.")
         # adjust below to allow spaces
-        # if postData['name'].isalpha()==False:
-        #     results["errors"].append("Names must be characters (a-z) only.")
+        if not re.match('[a-zA-Z]{2,}\s?[a-zA-z]{1,}?', postData['name']):
+            results["errors"].append("Names must be characters (a-z) only.")
+        if not re.match('[a-zA-Z]{2,}\s?[a-zA-z]{1,}?', postData['alias']):
+            results["errors"].append("Names must be characters (a-z) only.")
         # if postData['alias'].isalpha()==False:
         #     results["errors"].append("Alias must be characters (a-z) only.")
         if len(postData['email'])==0:
@@ -41,7 +43,9 @@ class UserManager(models.Manager):
         if dob > date.today():
             results['errors'].append('Birthdate must be before today.')
         #TODO add validaton check for empty/null date
-
+        if len(postData['birthdate'])==0:
+            results["errors"].append("'Birthdate' is a required field.")
+            
         if len(results['errors']):
             results['status']=False
         print results
