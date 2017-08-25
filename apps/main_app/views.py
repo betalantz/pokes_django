@@ -15,6 +15,7 @@ def dashboard(request):
     logged_user = User.objects.get(id=request.session['user_id'])
     context = {
         'users' : User.objects.all().exclude(id=request.session['user_id']),
+        'all_pokes' : User.objects.annotate(all_pokes=Count('poke_receivers'))
         'poked_curr' : logged_user.relationships.filter(poke_receivers__poke_giver=logged_user).annotate(dcount=Count('alias')),
         'poked_ppl' :  logged_user.relationships.filter(poke_givers__poke_receiver=logged_user).annotate(pcount=Count('alias'))
         }
@@ -29,14 +30,18 @@ def get_pokers(request):
 
 def addPoke(request, victim_id):
     victim = User.objects.get(id=victim_id)
-    victim.all_pokes += 1
-    victim.save()
+    # victim.all_pokes += 1
+    # victim.save()
 
     my_id = request.session['user_id']
     my_user = User.objects.get(id=my_id)
-    
-    p = Pokes.objects.create(poke_giver=poke_stat, poke_receiver=victim, total_this_rel = 1)
-    p.save()
-    
+    try:
+        p = Poke.objects.get(poke_giver=my_user, poke_receiver=victim)
+        p.total_pokes += 1
+        p.save()
+    except: 
+        p = Poke.objects.get(poke_giver=my_user, poke_receiver=victim, total_pokes=1)
+        p.save()
+
     return redirect('/main_app/dashboard')
 

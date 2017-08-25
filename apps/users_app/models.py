@@ -40,6 +40,7 @@ class UserManager(models.Manager):
         dob = datetime.datetime.strptime(dobstr, "%Y-%m-%d").date()
         if dob > date.today():
             results['errors'].append('Birthdate must be before today.')
+        #TODO add validaton check for empty/null date
 
         if len(results['errors']):
             results['status']=False
@@ -72,14 +73,6 @@ class UserManager(models.Manager):
             results['user']=users[0]
         return results
 
-    # def add_relationship(self, id):
-    #     relationship, created = Pokes.objects.get_or_create(
-    #         poke_giver = self,
-    #         poke_receiver=id, 
-    #         total_this_rel =+ 1
-    #     )
-    #     return relationship
-
 class User(models.Model):
     name = models.CharField(max_length=50)
     alias = models.CharField(max_length=50)
@@ -88,19 +81,18 @@ class User(models.Model):
     birthdate = models.DateField(auto_now_add=False)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
-    all_pokes = models.IntegerField(default=0)
-    relationships = models.ManyToManyField(
+    pokees = models.ManyToManyField(
         "self", 
-        through="Pokes",
+        through="Poke",
         symmetrical=False, 
-        related_name='related_to'
+        related_name='pokers'
         )
     objects = UserManager()
     def __repr__(self):
         return "<User object: {} {} {} {} {}>".format(self.name, self.alias, self.email, self.password, self.birthdate)
 
 
-class Pokes(models.Model):
+class Poke(models.Model):
     poke_giver = models.ForeignKey(User, related_name='poke_givers')
     poke_receiver = models.ForeignKey(User, related_name='poke_receivers')
-    total_this_rel = models.IntegerField(default=0)
+    total_pokes = models.IntegerField(default=0)
