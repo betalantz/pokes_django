@@ -38,13 +38,15 @@ class UserManager(models.Manager):
         if postData['psw'] != postData['cfm']:
             results["errors"].append("Passwords do not match.")
         
-        dobstr = postData['birthdate']
-        dob = datetime.datetime.strptime(dobstr, "%Y-%m-%d").date()
-        if dob > date.today():
-            results['errors'].append('Birthdate must be before today.')
-        #TODO add validaton check for empty/null date
-        if len(postData['birthdate'])==0:
+        try:
+            dobstr = postData['birthdate']
+            dob = datetime.datetime.strptime(dobstr, "%Y-%m-%d").date()
+            if dob > date.today():
+                results['errors'].append('Birthdate must be before today.')
+        except:
             results["errors"].append("'Birthdate' is a required field.")
+
+        #TODO add validaton check for empty/null date
             
         if len(results['errors']):
             results['status']=False
@@ -92,11 +94,13 @@ class User(models.Model):
         related_name='pokers'
         )
     objects = UserManager()
-    def __repr__(self):
-        return "<User object: {} {} {} {} {}>".format(self.name, self.alias, self.email, self.password, self.birthdate)
+    def __str__(self):
+        return "<User object: {} {}>".format(self.id, self.alias)
 
 
 class Poke(models.Model):
     poke_giver = models.ForeignKey(User, related_name='poke_givers')
     poke_receiver = models.ForeignKey(User, related_name='poke_receivers')
     total_pokes = models.IntegerField(default=0)
+    def __str__(self):
+        return "<Poke object: {} {} {}>".format(self.poke_giver, self.poke_receiver, self.total_pokes)

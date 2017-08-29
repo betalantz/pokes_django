@@ -13,13 +13,13 @@
 			</div>
 		</header>
 
-        <h1>Welcome, {{request.session.user_alias}} !</h1>
-            <h3>{{ poked_ppl.pcount }} people have poked you.</h3>
+        <h1>Welcome, {{request.session.user_alias}} {{request.session.user_id}} !</h1>
+            <h3>{{ numb_my_pokers }} people have poked you.</h3>
 		<br>
-        {%for poker in poked_curr %}
-            <p>{{poker.alias}} poked you {{poker.dcount}} times.</p>
-		{%endfor%}
-            <br><br>
+ 				{% for poker in all_pokers %}
+	                    <p>{{poker.alias}} poked you{% for poke in these_pokes %} {% if poke.poke_giver_id == poker.id %}{{ poke.total_pokes }} times. {% endif %} {% endfor %}</p>
+                {% endfor %}
+					<br><br>
 
 		<h2>People you may want to poke...</h2>
 		<table>
@@ -32,10 +32,14 @@
 			</tr>
 			{%for user in users%}
 			<tr>
-				<td>{{user.name}}</td>
+				<td>{{user.id}} {{user.name}}</td>
 				<td>{{user.alias}}</td>
 				<td>{{user.email}}</td>
-				<td>{{user.all_pokes}}</td>
+				{%for poke in pokes%}
+					{% if poke.poke_receiver == user.id %}
+					<td>{{poke.sum}}</td>
+					{%endif%}
+				{%endfor%}
 				<td><a href={% url 'addPoke' user.id %}>Poke</a></td>
 			</tr>
 			{%endfor%}
